@@ -1,6 +1,9 @@
 import math
-import tkinter as Tkinter
-
+import sys
+if sys.version[0] == '3':
+    import tkinter as Tkinter
+else:
+    import Tkinter as Tkinter
 
 # Checks whether the inputs less of than the other one
 def Less(x, y):
@@ -36,41 +39,73 @@ def ResultWeightsCalculate(Wk, Hi, N):
     return H_n
 
 
-def DrawHejwt(Canvas, H, minFreq, maxFreq, fs, N, width, height):
-    global DrawOffset
-    Canvas.delete("all")
-    Canvas.create_line(1*width / 8, 0, 1*width / 8, (DrawCoeff + 1) * height / 2, fill="gray", width=1)
-    Canvas.create_line(2*width / 8, 0, 2*width / 8, (DrawCoeff + 1) * height / 2, fill="gray", width=1)
-    Canvas.create_line(3*width / 8, 0, 3*width / 8, (DrawCoeff + 1) * height / 2, fill="gray", width=1)
-    Canvas.create_line(4*width / 8, 0, 4*width / 8, (DrawCoeff + 1) * height / 2, fill="gray", width=1)
-    Canvas.create_line(5*width / 8, 0, 5*width / 8, (DrawCoeff + 1) * height / 2, fill="gray", width=1)
-    Canvas.create_line(6*width / 8, 0, 6*width / 8, (DrawCoeff + 1) * height / 2, fill="gray", width=1)
-    Canvas.create_line(7*width / 8, 0, 7*width / 8, (DrawCoeff + 1) * height / 2, fill="gray", width=1)
-    Canvas.create_line(0, 1*((DrawCoeff + 1) * height / 2)/8, width, 1*((DrawCoeff + 1) * height / 2)/8, fill="gray", width=1)
-    Canvas.create_line(0, 2 * ((DrawCoeff + 1) * height / 2) / 8, width, 2 * ((DrawCoeff + 1) * height / 2) / 8, fill="gray", width=1)
-    Canvas.create_line(0, 3 * ((DrawCoeff + 1) * height / 2) / 8, width, 3 * ((DrawCoeff + 1) * height / 2) / 8, fill="gray", width=1)
-    Canvas.create_line(0, 4 * ((DrawCoeff + 1) * height / 2) / 8, width, 4 * ((DrawCoeff + 1) * height / 2) / 8, fill="gray", width=1)
-    Canvas.create_line(0, 5 * ((DrawCoeff + 1) * height / 2) / 8, width, 5 * ((DrawCoeff + 1) * height / 2) / 8, fill="gray", width=1)
-    Canvas.create_line(0, 6 * ((DrawCoeff + 1) * height / 2) / 8, width, 6 * ((DrawCoeff + 1) * height / 2) / 8, fill="gray", width=1)
-    Canvas.create_line(0, 7 * ((DrawCoeff + 1) * height / 2) / 8, width, 7 * ((DrawCoeff + 1) * height / 2) / 8, fill="gray", width=1)
-    Canvas.create_line(0, 8 * ((DrawCoeff + 1) * height / 2) / 8, width, 8 * ((DrawCoeff + 1) * height / 2) / 8, fill="gray", width=1)
-    Tkinter.Label(Canvas, text=str(1 * (maxFreq - minFreq) / 8)).place(x=1 * width / 8 - 18, y=height - 12)
-    Tkinter.Label(Canvas, text=str(2 * (maxFreq - minFreq) / 8)).place(x=2 * width / 8 - 18, y=height - 12)
-    Tkinter.Label(Canvas, text=str(3 * (maxFreq - minFreq) / 8)).place(x=3 * width / 8 - 18, y=height - 12)
-    Tkinter.Label(Canvas, text=str(4 * (maxFreq - minFreq) / 8)).place(x=4 * width / 8 - 18, y=height - 12)
-    Tkinter.Label(Canvas, text=str(5 * (maxFreq - minFreq) / 8)).place(x=5 * width / 8 - 18, y=height - 12)
-    Tkinter.Label(Canvas, text=str(6 * (maxFreq - minFreq) / 8)).place(x=6 * width / 8 - 18, y=height - 12)
-    Tkinter.Label(Canvas, text=str(7 * (maxFreq - minFreq) / 8)).place(x=7 * width / 8 - 18, y=height - 12)
-    Tkinter.Label(Canvas, text=str(8 * (maxFreq - minFreq) / 8)).place(x=8 * width / 8 - 18, y=height - 12)
+def DrawHejwt(canvas, H, minFreq, maxFreq, fs, N, width, height):
+    global drawOffset
+    canvas.delete("all")
+    offsetBetweenDiagrams=50
+    # vertical lines
+    canvas.create_line(0*width/8+40, 0,0*width/8+40, 40*8, fill="gray", width=1)
+    canvas.create_line(1 * width / 8+40, 0, 1 * width / 8+40, 40*8, fill="gray", width=1)
+    canvas.create_line(2 * width / 8+40, 0, 2 * width / 8+40, 40*8, fill="gray", width=1)
+    canvas.create_line(3 * width / 8+40, 0, 3 * width / 8+40, 40*8, fill="gray", width=1)
+    canvas.create_line(4 * width / 8+40, 0, 4 * width / 8+40, 40*8, fill="gray", width=1)
+    canvas.create_line(5 * width / 8+40, 0, 5 * width / 8+40, 40*8, fill="gray", width=1)
+    canvas.create_line(6 * width / 8+40, 0, 6 * width / 8+40, 40*8, fill="gray", width=1)
+    canvas.create_line(7 * width / 8+40, 0, 7 * width / 8+40, 40*8, fill="gray", width=1)
+    canvas.create_line(8*width/8+40, 0, 8*width/8+40, 40*8, fill="gray", width=1)
 
-    Prev=0
-    HeightCoeff=height*DrawCoeff
-    Offs=(height-HeightCoeff)/2
+    #horizontal lines
+    canvas.create_line(40, 1 * 40, width+40, 1 * 40, fill="gray", width=1)
+    canvas.create_line(40, 2 * 40, width+40, 2 * 40, fill="gray", width=1)
+    canvas.create_line(40, 3 * 40, width+40, 3 * 40, fill="gray", width=1)
+    canvas.create_line(40, 4 * 40, width+40, 4 * 40, fill="gray", width=1)
+    canvas.create_line(40, 5 * 40, width+40, 5 * 40, fill="gray", width=1)
+    canvas.create_line(40, 6 * 40, width+40, 6 * 40, fill="gray", width=1)
+    canvas.create_line(40, 7 * 40, width+40, 7 * 40, fill="gray", width=1)
+    canvas.create_line(40, 8 * 40, width+40, 8 * 40, fill="gray", width=1)
+
+    #texts
+    canvas.create_text(1 * width / 8+40, height - 5+offset, text=str(1 * (maxFreq - minFreq) / 8+minFreq))
+    canvas.create_text(2 * width / 8+40, height - 5+offset, text=str(2 * (maxFreq - minFreq) / 8+minFreq))
+    canvas.create_text(3 * width / 8+40, height - 5+offset, text=str(3 * (maxFreq - minFreq) / 8+minFreq))
+    canvas.create_text(4 * width / 8+40, height - 5+offset, text=str(4 * (maxFreq - minFreq) / 8+minFreq))
+    canvas.create_text(5 * width / 8+40, height - 5+offset, text=str(5 * (maxFreq - minFreq) / 8+minFreq))
+    canvas.create_text(6 * width / 8+40, height - 5+offset, text=str(6 * (maxFreq - minFreq) / 8+minFreq))
+    canvas.create_text(7 * width / 8+40, height - 5+offset, text=str(7 * (maxFreq - minFreq) / 8+minFreq))
+
+    canvas.create_text(20, 1*40, text="0 dB")
+    canvas.create_text(20, 2*40, text="-20 dB")
+    canvas.create_text(20, 3*40, text="-40 dB")
+    canvas.create_text(20, 4*40, text="-60 dB")
+    canvas.create_text(20, 5*40, text="-80 dB")
+    canvas.create_text(20, 6*40, text="-100 dB")
+    canvas.create_text(20, 7*40, text="-120 dB")
+    canvas.create_text(20, 8*40, text="-140 dB")
+
+
+    canvas.create_line(40, 110+8*40, width+40, 110+8*40, fill="gray", width=1)
+    canvas.create_line(40, 200+8*40, width+40, 200+8*40, fill="gray", width=1)
+    canvas.create_line(40, 290+8*40, width+40, 290+8*40, fill="gray", width=1)
+
+    canvas.create_text(20, 110+8*40, text="-90 dB")
+    canvas.create_text(20, 200+8*40, text="0 dB")
+    canvas.create_text(20, 290+8*40, text="-90 dB")
+
+    Offs=40
+    previousAbsOrdinate=Offs
+    previousAngleOrdinate=200+8*40
+
     FreqPix=(maxFreq-minFreq)/width
     for looper in range(0, width-1):
-        temp = Offs+HeightCoeff*(1-abs(HejwtCalculate(H, N, looper*FreqPix+minFreq, 1/fs)))
-        Canvas.create_line(looper, Prev, looper+1, temp, fill="blue", width=1)
-        Prev=temp
+        temp = Offs-20*math.log10(abs(HejwtCalculate(H, N, looper*FreqPix+minFreq, 1/fs)))
+        temp2 = HejwtCalculate(H, N, looper*FreqPix+minFreq, 1/fs)
+        #temp2 = 300+math.degrees(math.asin(temp2.imag/temp))*100
+        temp2 = 200+8*40+math.degrees(math.atan(temp2.imag/temp2.real))
+        #print("angle: "+str(temp2))
+        canvas.create_line(40+looper, previousAbsOrdinate, 40+looper + 1, temp, fill="blue", width=1)
+        canvas.create_line(40+looper, previousAngleOrdinate, 40+looper+1, temp2, fill="blue", width=1)
+        previousAbsOrdinate=temp
+        previousAngleOrdinate=temp2
 
 
 # This function implements the modified Bessel function
@@ -196,30 +231,36 @@ def StartButtonPressed():
             print("Band stop")
         print("Filter order: "+str(N))
         FilterOrder.config(text=str(int(N)))
-        for looper in range(0, int(N)):
-            print(H[looper])
+        #for looper in range(0, int(N)):
+        #    print(H[looper])
+        if(SaveCheckButtonVar.get()==1):
+            F=open("WeightSerial.txt","w")
+            for looper in range(0,len(H)):
+                F.write(str(H[looper])+"\n")
+            F.close()
         if(DrawCheckButtonVar.get()==1):
-            global DrawerWindow
+            global DrawerWindowWidth
+            global DrawerWindowHeight
+            global DrawerWindowWidthOffs
+            global DrawerWindowHeightOffs
             DrawerWindow = Tkinter.Toplevel(MainWindow)
-            DrawerWindow.geometry("1040x310")
+            DrawerWindow.geometry(str(DrawerWindowWidth+DrawerWindowWidthOffs)+"x"+str(2*(DrawerWindowHeight)))
             DrawerWindowHeight=300
             DrawerWindowWidth=1000
 
             # Creating a canvas and binding its click event to a function that places a label on the canvas with some information about the diagramm.
-            Canvas1 = Tkinter.Canvas(DrawerWindow, width=DrawerWindowWidth, height=DrawerWindowHeight)
-            Canvas1.place(x=30, y=0)
-            Canvas1.bind('<Button-1>', lambda e: ClickOnDraw(e, H, N, SamplingFrequency,DrawerWindowWidth,DrawerWindowHeight, Canvas1))
+            Canvas1 = Tkinter.Canvas(DrawerWindow, width=DrawerWindowWidth+40, height=2*(DrawerWindowHeight+offset))
+            Canvas1.place(x=0, y=0)
+            Canvas1.bind('<Button-1>', lambda e: ClickOnDraw(e, H, N, SamplingFrequency,DrawerWindowWidth,DrawerWindowHeight, Canvas1,DrawerWindow))
 
             MinFreqEntry = Tkinter.Entry(DrawerWindow,textvariable = MinFreqEntryVar)
-            #MinFreqEntry.place(x=DrawerWindowWidth-75,y=0, width=70)
-            MinFreqEntry.place(x=30, y=DrawerWindowHeight-10, width=50)
+            MinFreqEntry.place(x=30, y=40*8+5, width=50)
             MaxFreqEntry = Tkinter.Entry(DrawerWindow, textvariable=MaxFreqEntryVar)
-            #MaxFreqEntry.place(x=DrawerWindowWidth - 75, y=20, width=70)
-            MaxFreqEntry.place(x=DrawerWindowWidth - 10, y=DrawerWindowHeight-10, width=50)
+            MaxFreqEntry.place(x=DrawerWindowWidth - 10, y=40*8+5, width=50)
             MaxFreqEntryVar.set(str(SamplingFrequency))
             MinFreqEntryVar.set(str(0))
-            ReDrawButton = Tkinter.Button(DrawerWindow, text="Redraw", command=lambda:DrawHejwt(Canvas1, H, float(MinFreqEntryVar.get()), float(MaxFreqEntryVar.get()), SamplingFrequency, N, DrawerWindowWidth, DrawerWindowHeight))
-            ReDrawButton.place(x=DrawerWindowWidth-65,y=45)
+            ReDrawButton = Tkinter.Button(DrawerWindow, text="Re", command=lambda:DrawHejwt(Canvas1, H, float(MinFreqEntryVar.get()), float(MaxFreqEntryVar.get()), SamplingFrequency, N, DrawerWindowWidth, DrawerWindowHeight))
+            ReDrawButton.place(x=5,y=5)
             MinFreqEntryVar.trace("w", lambda name, index, mode: EntryChecker(MinFreqEntryVar))
             MaxFreqEntryVar.trace("w", lambda name, index, mode: EntryChecker(MaxFreqEntryVar))
 
@@ -227,7 +268,70 @@ def StartButtonPressed():
             Canvas1.create_line(0, (DrawCoeff+1)*DrawerWindowHeight/2, DrawerWindowWidth, (DrawCoeff+1)*DrawerWindowHeight/2, fill="blue", width=1)
             DrawHejwt(Canvas1, H, 0, SamplingFrequency, SamplingFrequency, N, DrawerWindowWidth, DrawerWindowHeight)
     except:
-        print("szar")
+        print("Exception occured")
+
+
+def SecondLoadButtonPressed(Var,Var2):
+    try:
+        F=open(Var.get(),"r")
+        File = F.read()
+        F.close()
+        H=[]
+        looper=0
+        looper2=0
+        while looper < len(File):
+            TemporaryStr = ""
+            while((looper<len(File)) and (File[looper] != '\n')):
+                TemporaryStr+=(File[looper])
+                looper+=1
+            H.append(float(TemporaryStr))
+            looper += 1
+            looper2+=1
+        N=looper2
+        global DrawerWindowWidth
+        global DrawerWindowHeight
+        global DrawerWindowWidthOffs
+        global DrawerWindowHeightOffs
+        DrawerWindow = Tkinter.Toplevel(MainWindow)
+        DrawerWindow.geometry(str(DrawerWindowWidth+DrawerWindowWidthOffs)+"x"+str(2*(DrawerWindowHeight)))
+        DrawerWindowHeight = 300
+        DrawerWindowWidth = 1000
+
+        # Creating a canvas and binding its click event to a function that places a label on the canvas with some information about the diagramm.
+        Canvas1 = Tkinter.Canvas(DrawerWindow, width=DrawerWindowWidth+40, height=2*(DrawerWindowHeight+offset))
+        Canvas1.place(x=0, y=0)
+        Canvas1.bind('<Button-1>', lambda e: ClickOnDraw(e, H, N, float(Var2.get()), DrawerWindowWidth, DrawerWindowHeight, Canvas1,DrawerWindow))
+
+        MinFreqEntry = Tkinter.Entry(DrawerWindow, textvariable=MinFreqEntryVar)
+        MinFreqEntry.place(x=30, y=40*8+5, width=50)
+        MaxFreqEntry = Tkinter.Entry(DrawerWindow, textvariable=MaxFreqEntryVar)
+        MaxFreqEntry.place(x=DrawerWindowWidth-10, y=40*8+5, width=50)
+        MaxFreqEntryVar.set(str(float(Var2.get())))
+        MinFreqEntryVar.set(str(0))
+        ReDrawButton = Tkinter.Button(DrawerWindow, text="Re",
+                                      command=lambda: DrawHejwt(Canvas1, H, float(MinFreqEntryVar.get()), float(MaxFreqEntryVar.get()), SamplingFrequency, N, DrawerWindowWidth, DrawerWindowHeight))
+        ReDrawButton.place(x=5, y=5)
+        MinFreqEntryVar.trace("w", lambda name, index, mode: EntryChecker(MinFreqEntryVar))
+        MaxFreqEntryVar.trace("w", lambda name, index, mode: EntryChecker(MaxFreqEntryVar))
+
+        # This line shows the 0 amplitude
+        Canvas1.create_line(0, (DrawCoeff+1)*DrawerWindowHeight/2, DrawerWindowWidth, (DrawCoeff+1)*DrawerWindowHeight/2, fill="blue", width=1)
+        DrawHejwt(Canvas1, H, 0, float(Var2.get()), float(Var2.get()), N, DrawerWindowWidth, DrawerWindowHeight)
+    except:
+        Var.set("P")
+
+def LoadButtonPressed():
+    LoaderWindow = Tkinter.Toplevel(MainWindow)
+    LoaderWindow.geometry("300x50")
+    LoaderEntryVar = Tkinter.StringVar()
+    LoaderEntry = Tkinter.Entry(LoaderWindow, width=35,textvariable=LoaderEntryVar)
+    LoaderEntry.place(x=0,y=0)
+    LoaderSamplingFreqEntryVar = Tkinter.StringVar()
+    LoaderSamplingFreqEntry = Tkinter.Entry(LoaderWindow, width=10,textvariable=LoaderSamplingFreqEntryVar)
+    LoaderSamplingFreqEntry.place(x=230,y=0)
+    LoaderSamplingFreqEntryVar.trace("w", lambda name, index, mode: EntryChecker(LoaderSamplingFreqEntryVar))
+    LB=Tkinter.Button(LoaderWindow, text="Load",command=lambda:SecondLoadButtonPressed(LoaderEntryVar,LoaderSamplingFreqEntryVar))
+    LB.place(x=0,y=20)
 
 
 # This function deletes the helper lines with information label from the canvas if right mouse click occures on it.
@@ -241,14 +345,14 @@ def DeleteHelperLine(ClickEvent, Canvas):
 
 
 # This function implements the drawing of the helper lines and information labels.
-def ClickOnDraw(ClickEvent, H, N, WindowMaxFreq, CanvasWidth, CanvasHeight, DrawableCanvas):
-    global DrawerWindow
+def ClickOnDraw(ClickEvent, H, N, WindowMaxFreq, CanvasWidth, CanvasHeight, DrawableCanvas,DrawerWindow):
     # It shows the amplitude in dB
-    FreqPix = WindowMaxFreq / CanvasWidth
-    temp = abs(HejwtCalculate(H, N, ClickEvent.x * FreqPix, 1 / WindowMaxFreq))
+    FreqPix = (float(MaxFreqEntryVar.get())-float(MinFreqEntryVar.get())) / CanvasWidth
+    t=HejwtCalculate(H, N, (ClickEvent.x-40) * FreqPix+float(MinFreqEntryVar.get()), 1 / WindowMaxFreq)
+    temp = abs(t)
     temp = 20*math.log10(temp)
-    TemporaryLabel = Tkinter.Label(DrawerWindow, text="A="+str(round(temp,3))+"\nf="+str(round(ClickEvent.x * FreqPix)))
-    TemporaryLine = DrawableCanvas.create_line(ClickEvent.x, 0, ClickEvent.x, (DrawCoeff + 1) * CanvasHeight / 2, fill="gray", width=1)
+    TemporaryLabel = Tkinter.Label(DrawerWindow, text="A="+str(round(temp,3))+"\nD="+str(round(math.degrees(math.atan(t.imag/t.real)),3))+"\nf="+str(round((ClickEvent.x-40) * FreqPix+float(MinFreqEntryVar.get()))))
+    TemporaryLine = DrawableCanvas.create_line(ClickEvent.x, 0, ClickEvent.x, 290+8*40, fill="#ff9900", width=1)
     TemporaryLabLine = TemporaryLabel, TemporaryLine
     # Appending the new helper line and label to their list
     ValueLabelArray.append(TemporaryLabLine)
@@ -289,13 +393,17 @@ def LowPassDesign(SamplingFreq, ClosingFrequency, TransitionFrequency, SuppressG
     H = ResultWeightsCalculate(Wk_n, Hi_n, N)
     return H, N
 
-
+DrawerWindowHeight = 320
+DrawerWindowWidth = 1000
+DrawerWindowHeightOffs = 40
+DrawerWindowWidthOffs = 45
 MainWindow = Tkinter.Tk()
 MainWindow.geometry("350x200")
-
+offset = 40
 # Initialization of the widget variables
 RadioButtonSelectorVariable = Tkinter.IntVar()
 DrawCheckButtonVar = Tkinter.IntVar()
+SaveCheckButtonVar = Tkinter.IntVar()
 F1EntryVar = Tkinter.StringVar()
 F2EntryVar = Tkinter.StringVar()
 F3EntryVar = Tkinter.StringVar()
@@ -320,7 +428,8 @@ DrawerWindow = []
 
 # End of initialization of the widget variables
 
-StartButton = Tkinter.Button(MainWindow, text="Start", command=StartButtonPressed).place(x=35, y=115)
+StartButton = Tkinter.Button(MainWindow, text="Start", command=StartButtonPressed).place(x=35, y=135, width=38)
+LoadButton = Tkinter.Button(MainWindow, text="Load", command=LoadButtonPressed).place(x=35, y=165,width=38)
 RadioButton1 = Tkinter.Radiobutton(MainWindow, text="Low-pass", variable=RadioButtonSelectorVariable, value=1, command=RadioButtonSelecter).place(x=10, y=10)
 RadioButton2 = Tkinter.Radiobutton(MainWindow, text="High-pass", variable=RadioButtonSelectorVariable, value=2, command=RadioButtonSelecter).place(x=10, y=30)
 RadioButton3 = Tkinter.Radiobutton(MainWindow, text="Band-pass", variable=RadioButtonSelectorVariable, value=3, command=RadioButtonSelecter).place(x=10, y=50)
@@ -369,6 +478,8 @@ FilterOrder.place(x=10, y=140)
 
 DrawCheckButton = Tkinter.Checkbutton(MainWindow, text="Draw", variable=DrawCheckButtonVar, onvalue=1, offvalue=0)
 DrawCheckButton.place(x=10, y=90)
+SaveCheckButton = Tkinter.Checkbutton(MainWindow, text="Save", variable=SaveCheckButtonVar, onvalue=1, offvalue=0)
+SaveCheckButton.place(x=10, y=108)
 
 LowOrHighPassRadioButtonPressed()
 
