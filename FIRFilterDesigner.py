@@ -271,14 +271,14 @@ def StartButtonPressed():
         print("Exception occured")
 
 
-def SecondLoadButtonPressed(Var,Var2):
+def SecondLoadButtonPressed(Var, Var2):
     try:
-        F=open(Var.get(),"r")
+        F = open(Var.get(),"r")
         File = F.read()
         F.close()
-        H=[]
-        looper=0
-        looper2=0
+        H = []
+        looper = 0
+        looper2 = 0
         while looper < len(File):
             TemporaryStr = ""
             while((looper<len(File)) and (File[looper] != '\n')):
@@ -309,7 +309,7 @@ def SecondLoadButtonPressed(Var,Var2):
         MaxFreqEntryVar.set(str(float(Var2.get())))
         MinFreqEntryVar.set(str(0))
         ReDrawButton = Tkinter.Button(DrawerWindow, text="Re",
-                                      command=lambda: DrawHejwt(Canvas1, H, float(MinFreqEntryVar.get()), float(MaxFreqEntryVar.get()), SamplingFrequency, N, DrawerWindowWidth, DrawerWindowHeight))
+                                      command=lambda: DrawHejwt(Canvas1, H, float(MinFreqEntryVar.get()), float(MaxFreqEntryVar.get()), float(Var2.get()), N, DrawerWindowWidth, DrawerWindowHeight))
         ReDrawButton.place(x=5, y=5)
         MinFreqEntryVar.trace("w", lambda name, index, mode: EntryChecker(MinFreqEntryVar))
         MaxFreqEntryVar.trace("w", lambda name, index, mode: EntryChecker(MaxFreqEntryVar))
@@ -351,7 +351,7 @@ def ClickOnDraw(ClickEvent, H, N, WindowMaxFreq, CanvasWidth, CanvasHeight, Draw
     t=HejwtCalculate(H, N, (ClickEvent.x-40) * FreqPix+float(MinFreqEntryVar.get()), 1 / WindowMaxFreq)
     temp = abs(t)
     temp = 20*math.log10(temp)
-    TemporaryLabel = Tkinter.Label(DrawerWindow, text="A="+str(round(temp,3))+"\nD="+str(round(math.degrees(math.atan(t.imag/t.real)),3))+"\nf="+str(round((ClickEvent.x-40) * FreqPix+float(MinFreqEntryVar.get()))))
+    TemporaryLabel = Tkinter.Label(DrawerWindow, text="A="+str(round(temp,3))+"\nD="+str(round(math.degrees(math.atan(t.imag/t.real)),3))+"\nf="+str(round((ClickEvent.x-40) * FreqPix+float(MinFreqEntryVar.get()),1)))
     TemporaryLine = DrawableCanvas.create_line(ClickEvent.x, 0, ClickEvent.x, 290+8*40, fill="#ff9900", width=1)
     TemporaryLabLine = TemporaryLabel, TemporaryLine
     # Appending the new helper line and label to their list
