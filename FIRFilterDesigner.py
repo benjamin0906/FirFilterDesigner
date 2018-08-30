@@ -164,6 +164,26 @@ def BaseWindowCoefficientForLowPass(fA, fZ, fs, Degree):
         ret.append(math.sin(Omegai * T * temp) / (math.pi * temp))
     return ret
 
+def BaseWindowCoefficientForBandPass(fz1, fa1, fa2, fz2, fs, Degree):
+    ret = []
+    Omegai1 = 2 * math.pi * math.fabs(fz1 + fa1) / 2
+    Omegai2 = 2 * math.pi * math.fabs(fz2 + fa2) / 2
+    T = 1 / fs
+    print("omegai = " + str(Omegai1) + " T = " + str(T))
+    offs = 0
+    # The number of the coefficients is always an odd number and the middle one in the serial must be calculated
+    # otherwise. Therefore there are 2 loop and between them there is the middle calculation.
+    for looper in range(0, int(Degree / 2)):
+        temp = looper - (Degree - 1) / 2
+        ret.append((math.sin(Omegai2 * T * temp) - math.sin(Omegai1 * T * temp)) / (math.pi * temp))
+    if(Degree%2 != 0):
+        ret.append((fz2 + fa2 - fz1 - fa1) / fs)
+        offs = 1
+    for looper in range(int(Degree / 2)+offs, int(Degree)):
+        temp = looper - (Degree - 1) / 2
+        ret.append((math.sin(Omegai2 * T * temp) - math.sin(Omegai1 * T * temp)) / (math.pi * temp))
+    return ret
+
 
 # This function calls the appropriate function according to the standing of the radiobuttons.
 def RadioButtonSelecter():
@@ -226,6 +246,7 @@ def StartButtonPressed():
         elif (RadioButtonSelectorVariable.get() == 2):
             H,N = HighPassDesign(SamplingFrequency, Break1Freq, Break2Freq, AmplitudeSuppressing, Fluctuation)
         elif (RadioButtonSelectorVariable.get() == 3):
+            H,N = BandPassDesign(SamplingFrequency, Break1Freq, Break2Freq, float(F3EntryVar.get()), float(F4EntryVar.get()), AmplitudeSuppressing, Fluctuation)
             print("Band pass")
         elif (RadioButtonSelectorVariable.get() == 4):
             print("Band stop")
@@ -393,6 +414,29 @@ def LowPassDesign(SamplingFreq, ClosingFrequency, TransitionFrequency, SuppressG
     H = ResultWeightsCalculate(Wk_n, Hi_n, N)
     return H, N
 
+
+def BandPassDesign(SamplingFreq, ClosingStopFrequency, TransitionStartFrequency, TransitionStopFrequency, ClosingStartFrequency, SuppressGain, Fluctuation):
+    # Calculating the filter order
+    dW1 = math.fabs(ClosingStopFrequency - TransitionStartFrequency) / SamplingFreq
+    Delta2 = math.pow(0.1, SuppressGain / 20)
+    N = (((-20 * math.log10(Less(Fluctuation, Delta2))) - 7.95) / (14.36 * dW1)) + 1
+    if (N > int(N)):
+        N = float(int(N) + 1)
+
+    # Calculating the beta for Kaisler windowing
+    Beta = 0.1102 * (SuppressGain - 8.7)
+
+    # Calculating of the window
+    Wk_n = KaislerWindowing(Beta, N)
+
+    # Calculating of the base coefficients
+    Hi_n = BaseWindowCoefficientForBandPass(ClosingStopFrequency, TransitionStartFrequency, TransitionStopFrequency, ClosingStartFrequency, SamplingFreq, N)
+
+    # Calculating of the final coefficients
+    H = ResultWeightsCalculate(Wk_n, Hi_n, N)
+    return H, N
+
+
 DrawerWindowHeight = 320
 DrawerWindowWidth = 1000
 DrawerWindowHeightOffs = 40
@@ -429,7 +473,7 @@ DrawerWindow = []
 # End of initialization of the widget variables
 
 StartButton = Tkinter.Button(MainWindow, text="Start", command=StartButtonPressed).place(x=35, y=135, width=38)
-LoadButton = Tkinter.Button(MainWindow, text="Load", command=LoadButtonPressed).place(x=35, y=165,width=38)
+LoadButton = Tkinter.Button(MainWindow, text="Load", command=LoadButtonPressed).place(x=35, y=165, width=38)
 RadioButton1 = Tkinter.Radiobutton(MainWindow, text="Low-pass", variable=RadioButtonSelectorVariable, value=1, command=RadioButtonSelecter).place(x=10, y=10)
 RadioButton2 = Tkinter.Radiobutton(MainWindow, text="High-pass", variable=RadioButtonSelectorVariable, value=2, command=RadioButtonSelecter).place(x=10, y=30)
 RadioButton3 = Tkinter.Radiobutton(MainWindow, text="Band-pass", variable=RadioButtonSelectorVariable, value=3, command=RadioButtonSelecter).place(x=10, y=50)
