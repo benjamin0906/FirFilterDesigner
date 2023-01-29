@@ -259,6 +259,21 @@ def StartButtonPressed():
             for looper in range(0,len(H)):
                 F.write(str(H[looper])+"\n")
             F.close()
+            try:
+                fractBit = int(FractionBitsVar.get())
+                fractBitStr = "{\n"
+                fixedPointWeightSerialFile = open("WeightSerialQ" + str(fractBit) + ".txt", "w")
+                for looper in range(0, len(H)):
+                    fractBitStr += str(round(H[looper] * (2 ** fractBit)))
+                    if((looper+1) != len(H)):
+                        fractBitStr += ", "
+                    if((looper != 0) and (((looper+1) % 10) == 0)):
+                        fractBitStr += "\n"
+                fractBitStr += "};"
+                fixedPointWeightSerialFile.write(fractBitStr)
+                fixedPointWeightSerialFile.close()
+            except ValueError:
+                print("Fixed point version is not generated")
         if(DrawCheckButtonVar.get()==1):
             global DrawerWindowWidth
             global DrawerWindowHeight
@@ -452,6 +467,7 @@ F1EntryVar = Tkinter.StringVar()
 F2EntryVar = Tkinter.StringVar()
 F3EntryVar = Tkinter.StringVar()
 F4EntryVar = Tkinter.StringVar()
+FractionBitsVar = Tkinter.StringVar()
 AmpEntryVar = Tkinter.StringVar()
 DeltaEntryVar = Tkinter.StringVar()
 SamplingFreqEntryVar = Tkinter.StringVar()
@@ -486,6 +502,7 @@ F4EntryVar.trace("w", lambda name, index, mode: EntryChecker(F4EntryVar))
 AmpEntryVar.trace("w", lambda name, index, mode: EntryChecker(AmpEntryVar))
 DeltaEntryVar.trace("w", lambda name, index, mode: EntryChecker(DeltaEntryVar))
 SamplingFreqEntryVar.trace("w", lambda name, index, mode: EntryChecker(SamplingFreqEntryVar))
+FractionBitsVar.trace("w", lambda name, index, mode: EntryChecker(FractionBitsVar))
 
 DeltaEntry = Tkinter.Entry(MainWindow, textvariable=DeltaEntryVar, selectforeground="red")
 DeltaEntry.place(x=200, y=11)
@@ -501,6 +518,8 @@ F3Entry = Tkinter.Entry(MainWindow, textvariable=F3EntryVar, selectforeground="r
 F3Entry.place(x=200, y=116)
 F4Entry = Tkinter.Entry(MainWindow, textvariable=F4EntryVar, selectforeground="red")
 F4Entry.place(x=200, y=137)
+FractionBitsEntry = Tkinter.Entry(MainWindow, textvariable =FractionBitsVar, selectforeground = "red")
+FractionBitsEntry.place(x=200, y=158)
 
 DeltaLabel = Tkinter.Label(MainWindow, text="Max fluctuation")
 DeltaLabel.place(x=100, y=10)
@@ -516,6 +535,8 @@ F3Label = Tkinter.Label(MainWindow, text="3. break freq")
 F3Label.place(x=100, y=136)
 F4Label = Tkinter.Label(MainWindow, text="4. break freq")
 F4Label.place(x=100, y=115)
+FractrionBitsLabel = Tkinter.Label(MainWindow, text = "Fraction bits:")
+FractrionBitsLabel.place(x = 100, y = 157)
 
 FilterOrder = Tkinter.Label(MainWindow)
 FilterOrder.place(x=10, y=140)
